@@ -1,5 +1,6 @@
 package com.codeaz.blogapp.users;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,10 @@ public class UserEntity {
     private String userName;
     @Column(unique = true, nullable = false)
     private String email;
+    @Column(nullable = true)
+    private String password;
+    @Nullable
     private String bio;
+    @Nullable
     private String img;
 }
