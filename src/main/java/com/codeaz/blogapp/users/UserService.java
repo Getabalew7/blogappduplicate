@@ -4,8 +4,11 @@ import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
 import com.codeaz.blogapp.users.dto.UserResponseDTO;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -23,14 +26,14 @@ public class UserService {
        userRepository.save(userEntity);
         return userEntity;
     }
-    public UserEntity findUserByUserName(String userName){
-        return userRepository.findByUserName(userName);
+    public List<UserResponseDTO> findUserByUserName(String userName){
+        var users = userRepository.findByUserName(userName);
+        if(users.isEmpty())
+            throw new UserNotFoundException(userName);
+        return users.stream().map(user->modelMapper.map(user,UserResponseDTO.class)).collect(Collectors.toList());
     }
     public UserResponseDTO getUserById(Long id) {
-        var user = userRepository.findById(id);
-        if(user.isEmpty()){
-            throw new UserNotFoundException(id);
-        }
+        var user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
         return modelMapper.map(user, UserResponseDTO.class);
     }
 }
