@@ -1,0 +1,3 @@
+2023-07-06 13:06:09 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]AUTHOR_ID ID"; expected "ALTER, ANALYZE"; SQL statement:
+AUTHOR_ID ID [42001-214]
