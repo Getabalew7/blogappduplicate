@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity(name = "articles")
@@ -19,6 +21,7 @@ public class ArticleEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @Column(nullable = false)
+    @NotNull
     private String title;
     @Column(unique = true)
     private String slug;
@@ -29,7 +32,6 @@ public class ArticleEntity {
     @ManyToOne
     @JoinColumn(name="authorId", nullable = false)
     private UserEntity author;
-    @CreatedDate
-    private Date createdAt;
-
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

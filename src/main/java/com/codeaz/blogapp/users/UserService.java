@@ -2,11 +2,10 @@ package com.codeaz.blogapp.users;
 
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
-import com.codeaz.blogapp.users.dto.UserResponseDTO;
+import com.codeaz.blogapp.users.dto.UserResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,14 +25,21 @@ public class UserService {
        userRepository.save(userEntity);
         return userEntity;
     }
-    public List<UserResponseDTO> findUserByUserName(String userName){
+    public List<UserResponse> findUserByUserName(String userName){
         var users = userRepository.findByUserName(userName);
         if(users.isEmpty())
             throw new UserNotFoundException(userName);
-        return users.stream().map(user->modelMapper.map(user,UserResponseDTO.class)).collect(Collectors.toList());
+        return users.stream().map(user->modelMapper.map(user,UserResponse.class)).collect(Collectors.toList());
     }
-    public UserResponseDTO getUserById(Long id) {
+    public UserResponse getUserById(Long id) {
         var user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
-        return modelMapper.map(user, UserResponseDTO.class);
+        return modelMapper.map(user, UserResponse.class);
+    }
+    public UserResponse loggedinUSer(String userName, String password){
+        var user = userRepository.findByUserName(userName);
+        if(user.size()==0){
+            throw new UserNotFoundException(userName);
+        }
+        return modelMapper.map(user, UserResponse.class);
     }
 }

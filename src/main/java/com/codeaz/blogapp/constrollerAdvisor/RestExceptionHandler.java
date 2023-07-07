@@ -1,5 +1,6 @@
 package com.codeaz.blogapp.constrollerAdvisor;
 
+import com.codeaz.blogapp.articles.Exception.ArticleNotFoundException;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,16 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+    @ExceptionHandler({UserNotFoundException.class, ArticleNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFoundException(Exception ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
+        body.put("status",HttpStatus.NOT_FOUND.toString().toLowerCase());
+        body.put("message", ex.getMessage());
+
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
 }
 

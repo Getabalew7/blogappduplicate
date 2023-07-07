@@ -2,9 +2,9 @@ package com.codeaz.blogapp.users;
 
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
-import com.codeaz.blogapp.users.dto.UserResponseDTO;
+import com.codeaz.blogapp.users.dto.UserLoginDTO;
+import com.codeaz.blogapp.users.dto.UserResponse;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,18 +22,24 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
     @PostMapping("")
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody CreateUserRequestDTO userRequest)
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequestDTO userRequest)
     {
         var user = userService.createUser(userRequest);
-        return ResponseEntity.ok(modelMapper.map(user, UserResponseDTO.class));
+        return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUSerById(@PathVariable Long id) throws UserNotFoundException {
+    public ResponseEntity<UserResponse> getUSerById(@PathVariable Long id) throws UserNotFoundException {
         var user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
     @GetMapping("")
-    public ResponseEntity<List<UserResponseDTO>> getUserByUsername(@RequestParam(required = false) String username) throws UserNotFoundException {
+    public ResponseEntity<List<UserResponse>> getUserByUsername(@RequestParam(required = false) String username)
+            throws UserNotFoundException {
         return ResponseEntity.ok(userService.findUserByUserName(username));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginDTO userLogin){
+        var user = userService.loggedinUSer(userLogin.getUserName(), userLogin.getPassword());
+        return ResponseEntity.ok(user);
     }
 }
