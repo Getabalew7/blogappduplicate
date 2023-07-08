@@ -6,6 +6,7 @@ import com.codeaz.blogapp.users.dto.UserLoginDTO;
 import com.codeaz.blogapp.users.dto.UserResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,6 @@ public class UserController {
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
-    @PostMapping("")
-    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequestDTO userRequest)
-    {
-        var user = userService.createUser(userRequest);
-        return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
-    }
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUSerById(@PathVariable Long id) throws UserNotFoundException {
         var user = userService.getUserById(id);
@@ -37,6 +32,14 @@ public class UserController {
             throws UserNotFoundException {
         return ResponseEntity.ok(userService.findUserByUserName(username));
     }
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("")
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequestDTO userRequest)
+    {
+        var user = userService.createUser(userRequest);
+        return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
+    }
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginDTO userLogin){
         var user = userService.loggedinUSer(userLogin.getUserName(), userLogin.getPassword());
