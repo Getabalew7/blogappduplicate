@@ -13,6 +13,3 @@ springdoc:
   swagger-ui:
     path: /swagger-ui-custom.html
     operations-sorter: method
-jasypt:
-  encryptor:
-    password: secret

@@ -4,7 +4,6 @@ import com.codeaz.blogapp.articles.Exception.ArticleNotFoundException;
 import com.codeaz.blogapp.articles.dto.CreateArticleRequest;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.UserRepository;
-import com.github.slugify.Slugify;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

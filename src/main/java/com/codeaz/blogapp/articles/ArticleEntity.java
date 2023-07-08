@@ -1,5 +1,6 @@
 package com.codeaz.blogapp.articles;
 
+import com.codeaz.blogapp.tags.TagsEntity;
 import com.codeaz.blogapp.users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "articles")
 @Setter
@@ -32,6 +35,8 @@ public class ArticleEntity {
     @ManyToOne
     @JoinColumn(name="authorId", nullable = false)
     private UserEntity author;
+    @ManyToMany
+    private List<TagsEntity> tags = new ArrayList<TagsEntity>();
     @CreationTimestamp
     private LocalDateTime createdAt;
 }
