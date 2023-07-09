@@ -1,5 +1,6 @@
 package com.codeaz.blogapp.users;
 
+import com.codeaz.blogapp.security.JwtService;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
 import com.codeaz.blogapp.users.dto.UserLoginDTO;
@@ -17,10 +18,12 @@ public class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final JwtService jwtService;
 
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, ModelMapper modelMapper, JwtService jwtService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.jwtService = jwtService;
     }
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUSerById(@PathVariable Long id) throws UserNotFoundException {
@@ -37,12 +40,15 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequestDTO userRequest)
     {
         var user = userService.createUser(userRequest);
-        return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
+        UserResponse userResponse = modelMapper.map(user, UserResponse.class);
+        userResponse.setToken(jwtService.generateToken(user.getId()));
+        return ResponseEntity.ok(userResponse);
     }
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginDTO userLogin){
         var user = userService.loggedinUSer(userLogin.getUserName(), userLogin.getPassword());
+        user.setToken(jwtService.generateToken(user.getId()));
         return ResponseEntity.ok(user);
     }
 }
