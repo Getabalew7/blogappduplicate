@@ -1,6 +1,7 @@
 package com.codeaz.blogapp.constrollerAdvisor;
 
 import com.codeaz.blogapp.articles.Exception.ArticleNotFoundException;
+import com.codeaz.blogapp.users.Exception.InvalidCredentialException;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<Object> handleInvalidCredentialException(Exception ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status",HttpStatus.UNAUTHORIZED.toString().toLowerCase());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
 }
