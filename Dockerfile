@@ -1,9 +1,4 @@
 FROM openjdk:17-jdk-alpine
-
-# Set the environment variables for the PostgreSQL database
-ENV POSTGRES_USER postgres
-ENV POSTGRES_PASSWORD secret
-ENV POSTGRES_DB mydb
 # Install Maven
 RUN apk add --no-cache maven
 WORKDIR /app
