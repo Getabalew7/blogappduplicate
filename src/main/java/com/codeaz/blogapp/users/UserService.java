@@ -1,5 +1,6 @@
 package com.codeaz.blogapp.users;
 
+import com.codeaz.blogapp.security.JwtService;
 import com.codeaz.blogapp.users.Exception.InvalidCredentialException;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
@@ -17,11 +18,13 @@ public class UserService {
     private  final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public UserEntity createUser(CreateUserRequestDTO requestDTO) {
@@ -37,8 +40,10 @@ public class UserService {
         return users.stream().map(user->modelMapper.map(user,UserResponse.class)).collect(Collectors.toList());
     }
     public UserResponse getUserById(Long id) {
-        var user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
-        return modelMapper.map(user, UserResponse.class);
+        var userEntity = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        var user= modelMapper.map(userEntity, UserResponse.class);
+        user.setToken(jwtService.generateToken(userEntity.getId()));
+        return user;
     }
     public UserResponse loggedinUSer(String userName, String password){
         var user = userRepository.findByUserName(userName);

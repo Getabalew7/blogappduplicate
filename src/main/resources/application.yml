@@ -1,12 +1,14 @@
 server:
   port: 8855
-spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./blog-app
+#spring:
+ # datasource:
+  #  url: jdbc:postgresql://localhost:5433/test
+   # username: postgres
+    #password: secret
+    #driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 springdoc:
   api-docs:
     path: /api-docs

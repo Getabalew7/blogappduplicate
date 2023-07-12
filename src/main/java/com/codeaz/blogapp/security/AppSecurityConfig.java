@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class AppSecurityConfig {
+
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -61,7 +62,6 @@ public class AppSecurityConfig {
        // jdbcUserDetailsManager.createUser(user);
         return  new InMemoryUserDetailsManager(user, admin);
     }
-    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
