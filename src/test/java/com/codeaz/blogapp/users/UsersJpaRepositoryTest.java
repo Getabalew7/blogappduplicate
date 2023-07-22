@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class UsersJpaRepositoryTest {
+class UsersJpaRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     @Test
@@ -35,10 +35,10 @@ public class UsersJpaRepositoryTest {
         userRepository.save(user);
         var oldUser = userRepository.findAll();
         assertNotNull(oldUser);
-        assertEquals(oldUser.size(),1);
+        assertEquals(1,oldUser.size());
     }
     @Test
-    public void can_find_user_by_id() throws Exception {
+    void can_find_user_by_id() throws Exception {
         var user = UserEntity.builder().userName("getch")
                .email("getch@gmail.com")
                .build();
@@ -48,7 +48,7 @@ public class UsersJpaRepositoryTest {
         assertEquals(oldUser.get().getId(), user.getId());
     }
     @Test
-    public void can_find_user_by_name() throws Exception {
+    void can_find_user_by_name() throws Exception {
         var user = UserEntity.builder().userName("getch")
               .email("getch@gmail.com")
               .build();
@@ -58,7 +58,7 @@ public class UsersJpaRepositoryTest {
         assertEquals(oldUser.get(0).getId(), user.getId());
     }
     @Test
-    public void can_update_user() throws Exception {
+    void can_update_user() throws Exception {
         var user = UserEntity.builder().userName("getch")
               .email("getch@gmail.com")
               .build();
@@ -74,7 +74,7 @@ public class UsersJpaRepositoryTest {
         assertEquals(newUser.get(0).getEmail(), user.getEmail());
     }
     @Test
-    public void can_delete_user() throws Exception {
+    void can_delete_user() throws Exception {
         var user = UserEntity.builder().userName("getch")
              .email("getch@gmail.com")
              .build();
@@ -84,6 +84,6 @@ public class UsersJpaRepositoryTest {
         assertEquals(oldUser.get().getId(), user.getId());
         userRepository.delete(user);
         var newUser = userRepository.findById(user.getId());
-        assertEquals(newUser.isEmpty(), true);
+        assertTrue(newUser.isEmpty());
     }
 }
