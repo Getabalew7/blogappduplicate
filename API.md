@@ -1,4 +1,4 @@
-# Blogging App
+# Blogging App end point 
 
 ## JSON Entities
 
