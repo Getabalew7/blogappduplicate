@@ -5,6 +5,7 @@ import com.codeaz.blogapp.users.Exception.InvalidCredentialException;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
 import com.codeaz.blogapp.users.dto.UserResponse;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,14 @@ public class UserService {
         return users.stream().map(user->modelMapper.map(user,UserResponse.class)).collect(Collectors.toList());
     }
     public UserResponse getUserById(Long id) {
-        var userEntity = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
-        var user= modelMapper.map(userEntity, UserResponse.class);
-        user.setToken(jwtService.generateToken(userEntity.getId()));
+        //var userEntity = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        //var user= modelMapper.map(userEntity, UserResponse.class);
+        // user.setToken(jwtService.generateToken(userEntity.getId()));
+        UserResponse user = new UserResponse();
+        user.setId(id);
+        user.setUserName("gech");
+        user.setEmail("test@test.com");
+
         return user;
     }
     public UserResponse loggedinUSer(String userName, String password){

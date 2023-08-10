@@ -3,10 +3,18 @@ package com.codeaz.blogapp.users;
 import com.codeaz.blogapp.security.JwtService;
 import com.codeaz.blogapp.users.Exception.UserNotFoundException;
 import com.codeaz.blogapp.users.dto.CreateUserRequestDTO;
+import com.codeaz.blogapp.users.dto.CustomUserResponseDTO;
 import com.codeaz.blogapp.users.dto.UserLoginDTO;
 import com.codeaz.blogapp.users.dto.UserResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +34,13 @@ public class UserController {
         this.jwtService = jwtService;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUSerById(@PathVariable Long id) throws UserNotFoundException {
+    public ResponseEntity<CustomUserResponseDTO> getUSerById(@PathVariable Long id) throws UserNotFoundException {
         var user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+        var cu = new CustomUserResponseDTO();
+        cu.setUserName(user.getUserName());
+        cu.setId(user.getId());
+        return ResponseEntity.ok(cu);
+        //return ResponseEntity.ok(user);
     }
     @GetMapping("")
     public ResponseEntity<List<UserResponse>> getUserByUsername(@RequestParam(required = false) String username)
